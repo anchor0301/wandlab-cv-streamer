@@ -14,7 +14,7 @@ from flask import request
 from flask import Response
 from flask import stream_with_context
 
-from lab.wandlab.streamer import Streamer
+from openCV.lab.wandlab.streamer import Streamer
 
 app = Flask( __name__ )
 streamer = Streamer()

@@ -18,13 +18,21 @@ from threading import Thread
 from queue import Queue
 
 class Streamer :
-    
+
     def __init__(self ):
         
         if cv2.ocl.haveOpenCL() :
             cv2.ocl.setUseOpenCL(True)
         print('[wandlab] ', 'OpenCL : ', cv2.ocl.haveOpenCL())
-            
+
+        id = "admin"
+        password = "rlatjdals1!"
+        ip_address = "192.168.100.254"
+        port = 554
+        url = f'rtsp://{id}:{password}@{ip_address}:{port}/cam/realmonitor?channel=1&subtype=2'
+        print(url)
+
+        self.url = url
         self.capture = None
         self.thread = None
         self.width = 640
@@ -40,11 +48,8 @@ class Streamer :
         
         self.stop()
     
-        if platform.system() == 'Windows' :        
-            self.capture = cv2.VideoCapture( src , cv2.CAP_DSHOW )
-        
-        else :
-            self.capture = cv2.VideoCapture( src )
+
+        self.capture = cv2.VideoCapture( self.url )
             
         self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
         self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
@@ -70,7 +75,7 @@ class Streamer :
         while True:
 
             if self.started :
-                (grabbed, frame) = self.capture.read()
+                grabbed, frame = self.capture.read()
                 
                 if grabbed : 
                     self.Q.put(frame)
